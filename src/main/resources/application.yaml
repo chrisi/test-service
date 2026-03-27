@@ -1,6 +1,6 @@
 spring:
   application:
-    name: test-service-a
+    name: test-service
   mongodb:
     uri: mongodb://admin:latrop@localhost:27017/test_service?authSource=admin
 
