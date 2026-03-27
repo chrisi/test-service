@@ -3,3 +3,7 @@ spring:
     name: test-service-a
   mongodb:
     uri: mongodb://admin:latrop@localhost:27017/test_service?authSource=admin
+
+remote:
+  echo:
+    url: http://localhost:8080
