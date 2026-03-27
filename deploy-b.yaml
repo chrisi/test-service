@@ -51,3 +51,44 @@ spec:
         - name: app-config
           configMap:
             name: test-service-b-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-service-b
+spec:
+  selector:
+    app: test-service-b
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: test-service-b-tls
+spec:
+  secretName: test-service-b-tls
+  issuerRef:
+    kind: ClusterIssuer
+    group: cert-manager.io
+    name: letsencrypt
+  dnsNames:
+    - test-service-b.dev.gtidev.net
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: test-service-b
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`test-service-b.dev.gtidev.net`)
+      kind: Rule
+      services:
+        - name: test-service-b
+          port: 8080
+  tls:
+    secretName: test-service-b-tls
