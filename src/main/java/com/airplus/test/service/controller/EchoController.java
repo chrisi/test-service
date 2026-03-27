@@ -1,4 +1,4 @@
-package com.airplus.test.service;
+package com.airplus.test.service.controller;
 
 import com.airplus.test.service.client.RemoteEchoClient;
 import com.airplus.test.service.service.GreetingService;
