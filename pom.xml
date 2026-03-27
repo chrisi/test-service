@@ -13,24 +13,26 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>test-service</name>
     <description>test-service</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+
     <properties>
         <java.version>25</java.version>
         <spring-cloud.version>2025.1.1</spring-cloud.version>
 <!--        <spring-boot.build-image.imagePlatform>linux/amd64</spring-boot.build-image.imagePlatform>-->
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>gtidev.nexus</id>
+            <name>Internal GTIDEV Repository - Releases</name>
+            <url>https://nexus.gtidev.net/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>gtidev.nexus</id>
+            <name>Internal GTIDEV Repository - Snapshots</name>
+            <url>https://nexus.gtidev.net/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -70,6 +72,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
