@@ -14,5 +14,6 @@ public class GreetingRecord {
     @Id
     private String id;
     private String name;
+    private String applicationName;
     private LocalDateTime timestamp;
 }
