@@ -1,11 +1,11 @@
 ## Build Image
 
 ```bash
-mvn spring-boot:build-image -Dspring-boot.build-image.imageName=dockerhub.gtidev.net/airplus/test-service
+mvn spring-boot:build-image -Dspring-boot.build-image.imageName=dockerhub.gtidev.net/airplus/test-service:latest
 ```
 
 ```bash
-docker push dockerhub.gtidev.net/airplus/test-service
+docker push dockerhub.gtidev.net/airplus/test-service:latest
 ```
 
 ## Deploy App
