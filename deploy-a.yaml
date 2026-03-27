@@ -16,7 +16,7 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-service
+  name: test-service-a
 spec:
   replicas: 1
   selector:
