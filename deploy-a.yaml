@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-service-a-config
+data:
+  application.yaml: |
+    spring:
+      application:
+        name: test-service-a
+      mongodb:
+        uri: mongodb://admin:latrop@mongodb.skunkworks:27017/test_service?authSource=admin
+      remote:
+        echo:
+          url: http://test-service-b.airplus.svc.cluster.local:8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-service-a
+  template:
+    metadata:
+      labels:
+        app: test-service-a
+    spec:
+      containers:
+        - name: test-service-a
+          image: dockerhub.gtidev.net/airplus/test-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: app-config
+              mountPath: /config/application.yaml
+              subPath: application.yaml
+          env:
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: file:/config/
+      volumes:
+        - name: app-config
+          configMap:
+            name: test-service-a-config
