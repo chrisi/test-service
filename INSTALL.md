@@ -11,13 +11,13 @@ docker push dockerhub.gtidev.net/airplus/test-service:latest
 ## Deploy App
 
 ```bash
-kubectl config set-context k3s-dev26
+kubectx k3s-dev26
 kubectl apply -n airplus -f deploy-a.yaml
 kubectl apply -n airplus -f deploy-b.yaml
 ```
 
 ```bash
-kubectl config set-context k3s-dev26
+kubectx k3s-dev26
 kubectl delete -n airplus -f deploy-a.yaml
 kubectl delete -n airplus -f deploy-b.yaml
 ```
