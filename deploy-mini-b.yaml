@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-service-b-config
+data:
+  application.yaml: |
+    server:
+      servlet:
+        context-path: /service-b
+    spring:
+      application:
+        name: test-service-b
+      mongodb:
+        uri: mongodb://admin:latrop@mongodb:27017/test_service?authSource=admin
+    remote:
+      echo:
+        url: http://test-service-a.default.svc.cluster.local:8080/service-a
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-service-b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-service-b
+  template:
+    metadata:
+      labels:
+        app: test-service-b
+    spec:
+      containers:
+        - name: test-service-b
+          image: test-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: app-config
+              mountPath: /config/application.yaml
+              subPath: application.yaml
+          env:
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: file:/config/
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Gi"
+              cpu: "500m"
+      volumes:
+        - name: app-config
+          configMap:
+            name: test-service-b-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-service-b
+spec:
+  selector:
+    app: test-service-b
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: test-service-b
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`localhost`) && PathPrefix(`/service-b`)
+      kind: Rule
+      services:
+        - name: test-service-b
+          port: 8080
+
