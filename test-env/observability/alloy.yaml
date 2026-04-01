@@ -20,31 +20,8 @@ data:
       role = "pod"
     }
 
-    loki.source.kubernetes "pods" {
-      targets    = discovery.kubernetes.pods.targets
-      forward_to = [loki.process.kubernetes.receiver]
-    }
-
-    loki.process "kubernetes" {
-      forward_to = [loki.relabel.kubernetes.receiver]
-
-      stage.json {
-        expressions = {
-          level = "level",
-          msg   = "msg",
-        }
-        drop_malformed = false
-      }
-
-      stage.labels {
-        values = {
-          level = "",
-        }
-      }
-    }
-
-    loki.relabel "kubernetes" {
-      forward_to = [loki.write.default.receiver]
+    discovery.relabel "pods" {
+      targets = discovery.kubernetes.pods.targets
 
       rule {
         source_labels = ["__meta_kubernetes_namespace"]
@@ -70,11 +47,16 @@ data:
         source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component"]
         target_label  = "component"
       }
+    
+      rule {
+        source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_part-of"]
+        target_label  = "part-of"
+      }
 
       rule {
         source_labels = ["app", "__meta_kubernetes_pod_name"]
         separator     = ";"
-        regex         = "^;(.*)$"
+        regex         = "^;(.+)-[a-f0-9]{8,10}-[a-z0-9]{5}$"
         replacement   = "$1"
         target_label  = "app"
       }
@@ -82,6 +64,29 @@ data:
       rule {
         action = "labeldrop"
         regex  = "__meta_kubernetes_pod_label_.+"
+      }
+    }
+
+    loki.source.kubernetes "pods" {
+      targets    = discovery.relabel.pods.output
+      forward_to = [loki.process.kubernetes.receiver]
+    }
+
+    loki.process "kubernetes" {
+      forward_to = [loki.write.default.receiver]
+
+      stage.json {
+        expressions = {
+          level = "level",
+          msg   = "msg",
+        }
+        drop_malformed = false
+      }
+
+      stage.labels {
+        values = {
+          level = "",
+        }
       }
     }
 
