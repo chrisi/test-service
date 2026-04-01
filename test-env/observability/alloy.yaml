@@ -150,24 +150,10 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/alloy
-            - name: varlogpods
-              mountPath: /var/log/pods
-              readOnly: true
-            - name: varlogcontainers
-              mountPath: /var/log/containers
-              readOnly: true
       volumes:
         - name: config
           configMap:
             name: alloy-config
-        - name: varlogpods
-          hostPath:
-            path: /var/log/pods
-            type: DirectoryOrCreate
-        - name: varlogcontainers
-          hostPath:
-            path: /var/log/containers
-            type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: Service
