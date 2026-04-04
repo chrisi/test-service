@@ -13,15 +13,22 @@ spring:
       enabled: true
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+      discovery:
+        enabled: true
   tracing:
     export:
       enabled: true
     sampling:
       probability: 1.0
-  otlp:
-    metrics:
-      export:
-        url: http://localhost:4318/v1/metrics
+  ### push metrics to OTLP
+  #  otlp:
+  #    metrics:
+  #      export:
+  #        url: http://localhost:4318/v1/metrics
   opentelemetry:
     tracing:
       export:
@@ -31,10 +38,6 @@ management:
       export:
         otlp:
           endpoint: http://localhost:4318/v1/logs
-#  endpoints:
-#    web:
-#      exposure:
-#        include: health,prometheus
 #  metrics:
 #    distribution:
 #      percentiles-histogram:
