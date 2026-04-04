@@ -2,6 +2,7 @@ package com.airplus.test.service.controller;
 
 import com.airplus.test.service.client.RemoteEchoClient;
 import com.airplus.test.service.service.GreetingService;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,21 +11,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Observed
 @Slf4j
 public class EchoController {
 
-    private final GreetingService greetingService;
-    private final RemoteEchoClient remoteEchoClient;
+  private final GreetingService greetingService;
+  private final RemoteEchoClient remoteEchoClient;
 
-    @GetMapping("/echo")
-    public String echo(@RequestParam(name = "name") String name) {
-        log.info("Received echo request for name: {}", name);
-        return greetingService.saveAndGetEcho(name);
-    }
+  @GetMapping("/echo")
+  public String echo(@RequestParam(name = "name") String name) {
+    log.info("Received echo request for name: {}", name);
+    return greetingService.saveAndGetEcho(name);
 
-    @GetMapping("/remoteecho")
-    public String remoteEcho(@RequestParam(name = "name") String name) {
-        log.info("Received remoteecho request for name: {}", name);
-        return remoteEchoClient.remoteEcho(name);
-    }
+  }
+
+  @GetMapping("/remoteecho")
+  public String remoteEcho(@RequestParam(name = "name") String name) {
+    log.info("Received remoteecho request for name: {}", name);
+    return remoteEchoClient.remoteEcho(name);
+  }
 }

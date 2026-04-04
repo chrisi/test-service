@@ -1,9 +1,55 @@
 spring:
+  cloud:
+    openfeign:
+      micrometer:
+        enabled: true
+
   application:
     name: test-service
   mongodb:
     uri: mongodb://admin:latrop@localhost:27017/test_service?authSource=admin
+  threads:
+    virtual:
+      enabled: true
+
+management:
+  tracing:
+    export:
+      enabled: true
+    sampling:
+      probability: 1.0
+  otlp:
+    metrics:
+      export:
+        url: http://localhost:4318/v1/metrics
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,prometheus
+#  metrics:
+#    distribution:
+#      percentiles-histogram:
+#        http.server.requests: true
+  observations:
+    annotations:
+      enabled: true
 
 remote:
   echo:
     url: http://localhost:8080
+
+server:
+  shutdown: graceful
+logging:
+  level:
+    root: INFO
+    com.airplus: DEBUG

@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "remoteEchoClient", url = "${remote.echo.url}")
 public interface RemoteEchoClient {
 
-    @GetMapping("/echo")
-    String remoteEcho(@RequestParam(name = "name") String name);
+  @GetMapping("/echo")
+  String remoteEcho(@RequestParam(name = "name") String name);
 }
