@@ -15,6 +15,12 @@ data:
     remote:
       echo:
         url: http://test-service-b.default.svc.cluster.local:8080/service-b
+    management:
+      opentelemetry:
+        tracing:
+          export:
+            otlp:
+              endpoint: http://alloy.observability.svc.cluster.local:4318
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -75,7 +81,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`localhost`) && PathPrefix(`/service-a`)
+    - match: Host(`traefik.mk`) && PathPrefix(`/service-a`)
       kind: Rule
       services:
         - name: test-service-a

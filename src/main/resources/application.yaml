@@ -24,20 +24,23 @@ management:
       enabled: true
     sampling:
       probability: 1.0
-  ### push metrics to OTLP
+  ### Alternative over prom scrape: push metrics to OTLP
   #  otlp:
   #    metrics:
   #      export:
   #        url: http://localhost:4318/v1/metrics
+  ######################
   opentelemetry:
     tracing:
       export:
         otlp:
-          endpoint: http://localhost:4318/v1/traces
-    logging:
-      export:
-        otlp:
-          endpoint: http://localhost:4318/v1/logs
+          endpoint: http://alloy.observability.svc.cluster.local:4318
+  ### Alternative over log scrape: push logs to OTLP
+  #  logging:
+  #    export:
+  #      otlp:
+  #        endpoint: http://localhost:4318/v1/logs
+  ####
 #  metrics:
 #    distribution:
 #      percentiles-histogram:

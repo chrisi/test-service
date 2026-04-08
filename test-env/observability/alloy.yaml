@@ -89,6 +89,29 @@ data:
         }
       }
     }
+    
+    otelcol.receiver.otlp "default" {
+      grpc {}
+      http {}
+      output {
+        traces = [otelcol.processor.batch.default.input]
+      }
+    }
+
+    otelcol.processor.batch "default" {
+      output {
+        traces = [otelcol.exporter.otlp.tempo.input]
+      }
+    }
+
+    otelcol.exporter.otlp "tempo" {
+      client {
+        endpoint = "tempo-distributor.observability.svc.cluster.local:4317"
+        tls {
+          insecure = true
+        }
+      }
+    }
 
 #    # Optional: Alloy selbst per Prometheus scrapebar machen
 #    prometheus.exporter.self "self" {}
