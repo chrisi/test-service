@@ -4,7 +4,7 @@
 
 ```bash
 cd ..
-mvn spring-boot:build-image -Dspring-boot.build-image.imageName=test-service:latest
+mvn clean package spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=test-service:latest
 ```
 
 ## Kubernetes
@@ -41,6 +41,7 @@ kubectl delete -n airplus -f service-b.yaml
 ### Load Image
 
 ```bash
+minikube image rm docker.io/library/test-service:latest
 minikube image load test-service:latest
 ```
 

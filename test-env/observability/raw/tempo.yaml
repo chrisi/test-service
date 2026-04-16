@@ -7,8 +7,10 @@ metadata:
 data:
   tempo.yaml: |2-
     stream_over_http_enabled: true
+    
     server:
       http_listen_port: 3200
+    
     distributor:
       receivers:
         otlp:
@@ -17,6 +19,11 @@ data:
               endpoint: 0.0.0.0:4317
             http:
               endpoint: 0.0.0.0:4318
+      # The distributor needs to know where to send incoming spans
+      ring:
+        kvstore:
+          store: inmemory
+    
     ingester:
       lifecycler:
         address: 127.0.0.1
@@ -25,9 +32,7 @@ data:
             store: inmemory
           replication_factor: 1
       max_block_duration: 5m
-    compactor:
-      compaction:
-        block_retention: 24h
+    
     storage:
       trace:
         backend: local
@@ -35,6 +40,18 @@ data:
           path: /var/tempo/traces
         wal:
           path: /var/tempo/wal
+    
+    # This section tells the Querier how to discover the Ingester 
+    # to avoid the "empty ring" error.
+    querier:
+      frontend_worker:
+        frontend_address: 127.0.0.1:9095
+    
+    # This is required in 2.10.x single-binary to bridge the internal components
+    overrides:
+      defaults:
+        ingestion:
+          max_traces_per_user: 10000
 ---
 apiVersion: apps/v1
 kind: Deployment

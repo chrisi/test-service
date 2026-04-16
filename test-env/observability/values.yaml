@@ -1,0 +1,19 @@
+reportingEnabled: false
+
+tempo:
+  receivers:
+    otlp:
+      protocols:
+        grpc: {}
+        http: {}
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    memory: 1Gi
+
+persistence:
+  enabled: true
+  size: 5Gi
